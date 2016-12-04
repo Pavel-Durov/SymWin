@@ -1,3 +1,6 @@
+This repository based on original SymWin project.
+I am using it for writing math equations, basically my changes reference math writings functionality only.
+ 
 SymWin ♠
 ========
 
