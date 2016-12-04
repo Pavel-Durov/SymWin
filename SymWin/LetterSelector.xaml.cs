@@ -8,6 +8,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 
 namespace SymWin
 {
@@ -45,8 +46,6 @@ namespace SymWin
 
                 // Todo: it seems our "clone" is not cloning events, so let's hook it here.
                 newLetter.PreviewMouseUp += OnMouseUp;
-                newLetter.GotFocus += NewLetter_GotFocus;
-                newLetter.LostFocus += NewLetter_LostFocus;
                 // Adjust border thickness. It'd be nice if we can (?) do this in xaml using style ala css pseudo selectors
                 var borderThick = newLetter.BorderThickness;
                 borderThick.Left = borderThick.Right = 1;
@@ -80,25 +79,52 @@ namespace SymWin
             this.Loaded += (_, __) => SelectNext();
         }
 
-        private void NewLetter_LostFocus(object sender, RoutedEventArgs e)
+        TextBox _prevaAimatedTextBox;
+        Storyboard _prevStoryboard;
+
+        private void SetAnimation(object sender)
         {
-            //var focusedTextBox = sender as TextBox;
-            //if (focusedTextBox != null)
-            //{
-            //    focusedTextBox.Width += 50;
-            //    focusedTextBox.Height += 50;
-            //}
+            var focusedTextBox = sender as TextBox;
+            if (focusedTextBox != null)
+            {
+                if (_prevStoryboard != null)
+                {
+                    _prevStoryboard.Stop();
+                }
+
+                _prevaAimatedTextBox = focusedTextBox;
+
+                var fade = new DoubleAnimation()
+                {
+                    From = 0,
+                    To = 1,
+                    Duration = TimeSpan.FromSeconds(1),
+                };
+
+                Storyboard.SetTarget(fade, focusedTextBox);
+                Storyboard.SetTargetProperty(fade, new PropertyPath(Button.OpacityProperty));
+
+                _prevStoryboard = new Storyboard();
+                _prevStoryboard.Children.Add(fade);
+
+                _prevStoryboard.Begin();
+            }
         }
 
-        private void NewLetter_GotFocus(object sender, RoutedEventArgs e)
+
+
+        private void SetAnimation(double from, double to, string targetProp, DoubleAnimation animation, TextBox AnimatedElement)
         {
-            //var focusedTextBox = sender as TextBox;
-            //if (focusedTextBox != null && focusedTextBox.Width > 50)
-            //{
-            //    focusedTextBox.Width -= 50;
-            //    focusedTextBox.Height -= 50;
-            //}
+            animation.EasingFunction = new CubicEase();
+
+            animation.Duration = TimeSpan.FromSeconds(value: 0.5);
+
+            animation.From = from;
+            animation.To = to;
+
+            Storyboard.SetTarget(animation, AnimatedElement);
         }
+
 
         public readonly Key Key;
 
@@ -140,7 +166,10 @@ namespace SymWin
 
             _mActiveIndex = (_mActiveIndex + 1) % count;
 
-            _mTextBoxes[_mActiveIndex].Focus();
+            var txtBox = _mTextBoxes[_mActiveIndex];
+
+            txtBox.Focus();
+            SetAnimation((object)txtBox);
         }
 
         public void SelectPrevious()
