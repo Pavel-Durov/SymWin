@@ -80,51 +80,36 @@ namespace SymWin
         }
 
         TextBox _prevaAimatedTextBox;
-        Storyboard _prevStoryboard;
+        Storyboard _currentStoryboard;
 
-        private void SetAnimation(object sender)
+        private void SetAnimation(TextBox sender)
         {
             var focusedTextBox = sender as TextBox;
             if (focusedTextBox != null)
             {
-                if (_prevStoryboard != null)
+                if (_currentStoryboard != null)
                 {
-                    _prevStoryboard.Stop();
+                    _currentStoryboard.Stop();
                 }
 
                 _prevaAimatedTextBox = focusedTextBox;
 
                 var fade = new DoubleAnimation()
                 {
-                    From = 0,
+                    From = 0.5,
                     To = 1,
-                    Duration = TimeSpan.FromSeconds(1),
+                    Duration = TimeSpan.FromSeconds(0.5),
                 };
 
                 Storyboard.SetTarget(fade, focusedTextBox);
                 Storyboard.SetTargetProperty(fade, new PropertyPath(Button.OpacityProperty));
 
-                _prevStoryboard = new Storyboard();
-                _prevStoryboard.Children.Add(fade);
+                _currentStoryboard = new Storyboard();
+                _currentStoryboard.Children.Add(fade);
 
-                _prevStoryboard.Begin();
+                _currentStoryboard.Begin();
             }
         }
-
-
-
-        private void SetAnimation(double from, double to, string targetProp, DoubleAnimation animation, TextBox AnimatedElement)
-        {
-            animation.EasingFunction = new CubicEase();
-
-            animation.Duration = TimeSpan.FromSeconds(value: 0.5);
-
-            animation.From = from;
-            animation.To = to;
-
-            Storyboard.SetTarget(animation, AnimatedElement);
-        }
-
 
         public readonly Key Key;
 
@@ -163,22 +148,24 @@ namespace SymWin
         public void SelectNext()
         {
             var count = _mTextBoxes.Length;
+            var index = (_mActiveIndex + 1) % count;
+            SelectTextBox(index);
+        }
 
-            _mActiveIndex = (_mActiveIndex + 1) % count;
+        private void SelectTextBox(int index)
+        {
+            _mActiveIndex = index;
 
             var txtBox = _mTextBoxes[_mActiveIndex];
-
             txtBox.Focus();
-            SetAnimation((object)txtBox);
+            SetAnimation(txtBox);
         }
 
         public void SelectPrevious()
         {
             var count = _mTextBoxes.Length;
-
-            _mActiveIndex = (count + _mActiveIndex - 1) % count;
-
-            _mTextBoxes[_mActiveIndex].Focus();
+            var index = (count + _mActiveIndex - 1) % count;
+            SelectTextBox(index);
         }
 
         private void TextBox_TextChanged(Object sender, TextChangedEventArgs e)

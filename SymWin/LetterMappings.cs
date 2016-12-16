@@ -12,36 +12,17 @@ namespace SymWin
     public static class LetterMappings
     {
         public static readonly Dictionary<Key, Tuple<Char[], Char[]>> KeysToSymbols = new Dictionary<Key, Tuple<Char[], Char[]>>
-      {
-
-           
+        {   
          { Key.A, Tuple.Create(CharacterConst.ARROWS_CHARS_PART1, CharacterConst.ARROWS_CHARS_PART2)},
-         { Key.B, CharacterConst.EMPTY_TUPLE},
-         { Key.C, CharacterConst.EMPTY_TUPLE},
          { Key.D, Tuple.Create(CharacterConst.DOUBLE_STRUCK_CHARS, CharacterConst.DOUBLE_STRUCK_CHARS)},
          { Key.E, Tuple.Create(CharacterConst.BASIC_MATH_PART1, CharacterConst.BASIC_MATH_PART2)},
-         { Key.F, CharacterConst.EMPTY_TUPLE},
          { Key.G, Tuple.Create(CharacterConst.GREEK_LETTERS_LOWERCASE, CharacterConst.GREEK_LETTERS_UPPERCASE)},
-         { Key.H, CharacterConst.EMPTY_TUPLE},
-         { Key.I, CharacterConst.EMPTY_TUPLE},
-         { Key.J, CharacterConst.EMPTY_TUPLE},
-         { Key.L, CharacterConst.EMPTY_TUPLE},
-         { Key.M, CharacterConst.EMPTY_TUPLE},
-         { Key.K, CharacterConst.EMPTY_TUPLE},
-         { Key.N, CharacterConst.EMPTY_TUPLE},
-         { Key.O, CharacterConst.EMPTY_TUPLE},
-         { Key.P, CharacterConst.EMPTY_TUPLE},
          { Key.Q, Tuple.Create(CharacterConst.RELATIONS_CHARS, CharacterConst.NEGATED_RELATIONS_CHARS)},
-         
          { Key.R, Tuple.Create(CharacterConst.ADVANCED_RELATIONAL_OPERATIONS, CharacterConst.ADVANCED_RELATIONAL_OPERATIONS)},
          { Key.S, Tuple.Create(CharacterConst.NEGATED_ARROWS_CHARS, CharacterConst.NEGATED_ARROWS_CHARS)},
-         { Key.T, CharacterConst.EMPTY_TUPLE},
-         { Key.U, CharacterConst.EMPTY_TUPLE},
-         { Key.V, CharacterConst.EMPTY_TUPLE},
          { Key.W, Tuple.Create(CharacterConst.BINARY_OPERATIONS, CharacterConst.BINARY_OPERATIONS)},
          { Key.X, Tuple.Create(CharacterConst.BASIC_N_ARRAY_OPERATORS, CharacterConst.BASIC_N_ARRAY_OPERATORS)},
-         { Key.Y, CharacterConst.EMPTY_TUPLE},
-         { Key.Z, Tuple.Create(CharacterConst.GEOMETRY_CHARS, CharacterConst.GEOMETRY_CHARS)},
+         { Key.Z, Tuple.Create(CharacterConst.GEOMETRY_CHARS, CharacterConst.GEOMETRY_CHARS )},
 
          // Numbers
          { Key.D0, Tuple.Create(new[]  { '☺', '☻', '∞', 'ø' }, new[]  { '☺', '☻', '∞', 'Ø' })},
@@ -72,11 +53,12 @@ namespace SymWin
          { Key.OemSemicolon, CharacterConst.EMPTY_TUPLE }, // = Oem1 = Oem102
          { Key.OemTilde, CharacterConst.EMPTY_TUPLE },
          { Key.Subtract, CharacterConst.EMPTY_TUPLE },
+
       };
 
         public static void UpdateKey(Key key, Char[] lowerCase, Char[] upperCase)
         {
-            if (lowerCase.Length != upperCase.Length) throw new ArgumentException("lower and upper case letter arrays must be of equal length");
+            //if (lowerCase.Length != upperCase.Length) throw new ArgumentException("lower and upper case letter arrays must be of equal length");
             var pair = Tuple.Create(lowerCase, upperCase);
             KeysToSymbols[key] = pair;
 
